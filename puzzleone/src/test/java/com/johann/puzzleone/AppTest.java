@@ -33,9 +33,8 @@ public class AppTest extends TestCase
     public void testAdvanced_m()
     {
       
-    	for(int i = 0; i < 100000; i++){
+    	
     	Assert.assertEquals("fifty six million nine hundred and forty five thousand seven hundred and eighty one", puzzle.convert(56945781));
-    	}
     	
     	Assert.assertEquals("ninety six million two hundred and sixty two thousand seven hundred and eighty one", 
     			puzzle.convert(96262781));
@@ -58,6 +57,7 @@ public class AppTest extends TestCase
     	Assert.assertEquals("one thousand two hundred and thirty", puzzle.convert(1230));
     	Assert.assertEquals("one thousand two hundred", puzzle.convert(1200));
     	Assert.assertEquals("one thousand one hundred", puzzle.convert(1100));
+    	Assert.assertEquals("two thousand", puzzle.convert(2000));
     	Assert.assertEquals("one thousand", puzzle.convert(1000));
     	 
     }
