@@ -2,11 +2,22 @@ package com.johann.puzzleone.service;
 
 import java.text.DecimalFormat;
 
-public class PuzzleImpl  {
+public class PuzzleImpl implements PuzzleOne  {
 
+	//avoid public access
+	private PuzzleImpl(){
+		super();
+	}
+	
+	static class PuzzleImplHolder {
+	        static final PuzzleOne INSTANCE = new PuzzleImpl();
+	}
+	public static PuzzleOne getInstance() {
+	        return PuzzleImplHolder.INSTANCE;
+	}
 	
 	
-	private static final String[] tensNames = {
+	private final String[] tensNames = {
 	    "",
 	    " ten",
 	    " twenty",
@@ -19,7 +30,7 @@ public class PuzzleImpl  {
 	    " ninety"
 	  };
 
-	  private static final String[] numNames = {
+	  private final String[] numNames = {
 	    "",
 	    " one",
 	    " two",
@@ -42,96 +53,70 @@ public class PuzzleImpl  {
 	    " nineteen"
 	  };
 
-	  private static String convertLessThanOneThousand(int number) {
-	    String soFar;
+	  private  String convert(int number) {
+	    
+	    StringBuilder aux = new StringBuilder();
 
 	    if (number % 100 < 20){
-	      soFar = numNames[number % 100];
+	      aux.append(numNames[number % 100]);
 	      number /= 100;
 	    }
 	    else {
-	      soFar = numNames[number % 10];
-	      number /= 10;
 
-	      soFar = tensNames[number % 10] + soFar;
-	      number /= 10;
+	      aux.append(tensNames[(number/10) % 10]).append(numNames[(number) % 10]);
+	      number /= 100;
 	    }
-	    if (number == 0) return soFar;
-	    return numNames[number] + " hundred and " + soFar;
+	    if (number == 0){
+	    	return aux.toString();
+	    }
+	    
+	    return numNames[number] + hundred + aux.toString();
 	  }
 
 
-	  public static String convert(long number) {
-	    // 0 to 999 999 999 999
+	  /* (non-Javadoc)
+	 * @see com.johann.puzzleone.service.PuzzleOne#convert(long)
+	 */
+	public String convert(long number) {
+	    // 0 to 999 999 999
 	    if (number == 0) { return "zero"; }
 
 	    String snumber = Long.toString(number);
+	    StringBuilder result = new StringBuilder(1*64);
 
-	    // pad with "0"
-	    String mask = "000000000000";
-	    DecimalFormat df = new DecimalFormat(mask);
+	    
 	    snumber = df.format(number);
-
-	    // XXXnnnnnnnnn 
-	    int billions = Integer.parseInt(snumber.substring(0,3));
-	    // nnnXXXnnnnnn
-	    int millions  = Integer.parseInt(snumber.substring(3,6)); 
-	    // nnnnnnXXXnnn
-	    int hundredThousands = Integer.parseInt(snumber.substring(6,9)); 
-	    // nnnnnnnnnXXX
-	    int thousands = Integer.parseInt(snumber.substring(9,12));    
-
-	    String tradBillions;
-	    switch (billions) {
-	    case 0:
-	      tradBillions = "";
-	      break;
-	    case 1 :
-	      tradBillions = convertLessThanOneThousand(billions) 
-	      + " billion ";
-	      break;
-	    default :
-	      tradBillions = convertLessThanOneThousand(billions) 
-	      + " billion ";
+	    
+	    for(int i = 0; i < 9; i +=3){
+	    	int illions = Integer.parseInt(snumber.substring(i,i+3));
+	    	if(illions != 0){
+	  
+	    		result.append( convert(illions)  + getEnding(i));
+	    	}
 	    }
-	    String result =  tradBillions;
+	    return result.toString().trim();
+	   
 
-	    String tradMillions;
-	    switch (millions) {
-	    case 0:
-	      tradMillions = "";
-	      break;
-	    case 1 :
-	      tradMillions = convertLessThanOneThousand(millions) 
-	      + " million ";
-	      break;
-	    default :
-	      tradMillions = convertLessThanOneThousand(millions) 
-	      + " million ";
-	    }
-	    result =  result + tradMillions;
-
-	    String tradHundredThousands;
-	    switch (hundredThousands) {
-	    case 0:
-	      tradHundredThousands = "";
-	      break;
-	    case 1 :
-	      tradHundredThousands = "one thousand ";
-	      break;
-	    default :
-	      tradHundredThousands = convertLessThanOneThousand(hundredThousands) 
-	      + " thousand ";
-	    }
-	    result =  result + tradHundredThousands;
-
-	    String tradThousand;
-	    tradThousand = convertLessThanOneThousand(thousands);
-	    result =  result + tradThousand;
-	    //return result;
-	    // remove extra spaces!
-	    return result.replaceAll("^\\s+", "").replaceAll("\\b\\s{2,}\\b", " ");
 	  }
 
 
+	private  String getEnding(int i) {
+		
+		switch(i){
+		
+		case 0: return(million);
+		case 3:  return(thousand);//end = " thousand";break;
+		
+		default: return("");
+		}
+		
+	}
+
+ private static final String million = " million";
+ private static final String thousand = " thousand";
+ private static final String hundred = " hundred and";
+
+ //pad with "0"
+ private static final String mask = "000000000";
+ private static final DecimalFormat df = new DecimalFormat(mask);
 }

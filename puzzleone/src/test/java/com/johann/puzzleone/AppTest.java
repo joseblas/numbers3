@@ -5,17 +5,17 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import com.johann.puzzleone.service.Puzzle;
 import com.johann.puzzleone.service.PuzzleImpl;
+import com.johann.puzzleone.service.PuzzleOne;
 
 public class AppTest extends TestCase
 {
-    private PuzzleImpl puzzle;
+    private PuzzleOne puzzle;
 	
 	public AppTest( String testName )
     {
         super( testName );
-        puzzle = new PuzzleImpl();
+        puzzle = PuzzleImpl.getInstance();
     }
 
     /**
@@ -27,26 +27,41 @@ public class AppTest extends TestCase
     }
 
     
-    public void testAdvanced()
+    
+
+    
+    public void testAdvanced_m()
     {
-    	System.out.println(PuzzleImpl.convert(56945781));
-    	System.out.println("fifty six million nine hundred and forty five thousand seven hundred and eighty one");
-    	Assert.assertEquals("fifty six million nine hundred and forty five thousand seven hundred and eighty one", PuzzleImpl.convert(56945781));
+      
+    	for(int i = 0; i < 100000; i++){
+    	Assert.assertEquals("fifty six million nine hundred and forty five thousand seven hundred and eighty one", puzzle.convert(56945781));
+    	}
+    	
+    	 
+    } 
+    
+    public void testAdvanced_t()
+    {
+      
+    	
+    	Assert.assertEquals("ten thousand one hundred and eighty three", puzzle.convert(10183));
+    	Assert.assertEquals("five thousand eight hundred and eighty eight", puzzle.convert(5888)); 
+    	 
     }
         
     public void testBasic_2()
     {
-    	Assert.assertEquals("twenty one", PuzzleImpl.convert(21));
+    	Assert.assertEquals("twelve", puzzle.convert(12));
     	
-    	Assert.assertEquals("one hundred and five", PuzzleImpl.convert(105));
-    	Assert.assertEquals("twenty one", PuzzleImpl.convert(21));
-    	Assert.assertEquals("twenty one", PuzzleImpl.convert(21));
+    	Assert.assertEquals("one hundred and five", puzzle.convert(105));
+    	Assert.assertEquals("twenty two", puzzle.convert(22));
+    	Assert.assertEquals("twenty one", puzzle.convert(21));
     	
     }
     
     public void testBasic()
     {
-    	Assert.assertEquals("one", PuzzleImpl.convert(1));
-    	Assert.assertEquals("twenty", PuzzleImpl.convert(20));
+    	Assert.assertEquals("one", puzzle.convert(1));
+    	Assert.assertEquals("twenty", puzzle.convert(20));
     }
 }
